@@ -1,4 +1,4 @@
-package week1;
+package org.talangsoft.algorithms.week1;
 
 import org.junit.Test;
 import org.talangsoft.algoritms.week1.MergeSort;
@@ -13,7 +13,7 @@ public class MergeSortTest {
     private MergeSort underTest = new MergeSort();
 
     int[] from1toMillion = IntStream.rangeClosed(1,1000000).toArray();
-    int[] fromMillionTo1 = IntStream.rangeClosed(1,1000000).map(nr -> 1000000 - nr +1).toArray();
+    int[] fromMillionTo1 = IntStream.rangeClosed(1,1000000).map(nr -> 1000001 - nr).toArray();
 
     @Test
     public void testMergeSortForSortedInputWith1MillionItems() {
