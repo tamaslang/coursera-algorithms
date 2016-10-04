@@ -14,16 +14,16 @@ public class NumberOfInversionsTest {
 
     @Test
     public void countNrOfInversionsInSortedArrayShouldBe0() {
-        assertThat(underTest.countNumberOfInversions(IntStream.rangeClosed(1, 6).toArray()), is(0));
+        assertThat(underTest.countNumberOfInversions(IntStream.rangeClosed(1, 6).toArray()), is(0L));
     }
 
     @Test
     public void countNrOfInversionsInArrayShouldBe3() {
-        assertThat(underTest.countNumberOfInversions(new int[]{1,3,5,2,4,6}),is(3));
+        assertThat(underTest.countNumberOfInversions(new int[]{1,3,5,2,4,6}),is(3L));
     }
 
     @Test
     public void countNrOfInversionsInReverseSortedArrayShouldBe15() {
-        assertThat(underTest.countNumberOfInversions(IntStream.rangeClosed(1, 6).map(nr -> 6-nr).toArray()),is(15));
+        assertThat(underTest.countNumberOfInversions(IntStream.rangeClosed(1, 6).map(nr -> 6-nr).toArray()),is(15L));
     }
 }
