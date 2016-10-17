@@ -3,6 +3,7 @@ package org.talangsoft.algorithms.week2;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.talangsoft.algorithms.helper.InputFileReader;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
@@ -21,15 +22,6 @@ public class QuickSortAssignmentTest {
     private String sourceFile1000 = "week2/1000.txt";
 
 
-    public int[] readElements(String sourceFile) throws Exception {
-        // reading lines
-        ClassLoader classLoader = getClass().getClassLoader();
-        java.net.URL url = classLoader.getResource(sourceFile);
-        java.nio.file.Path resPath = java.nio.file.Paths.get(url.toURI());
-        return java.nio.file.Files.readAllLines(resPath).stream().mapToInt(Integer::valueOf).toArray();
-    }
-
-
     public void validateSorted(int[] array) {
         for (int i = 1; i < array.length; i++) {
             Assert.assertTrue("Upcoming element should be greated than the previous. problem in position " + i + "." +
@@ -40,7 +32,7 @@ public class QuickSortAssignmentTest {
     }
 
     private void expectNrOfComputation(String sourcefile, PivotChooseStrategy strategy, long numberOfCalculations) throws Exception{
-        int[] elements = readElements(sourcefile);
+        int[] elements = InputFileReader.readIntElements(sourcefile);
         QuickSort quickSort = new QuickSort(strategy);
         int[] sortedArr = quickSort.quickSort(elements);
         // should Be sorted
