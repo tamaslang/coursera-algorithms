@@ -1,13 +1,6 @@
 package org.talangsoft.algorithms.week1;
 
-import org.junit.Before;
 import org.junit.Test;
-import org.talangsoft.algoritms.week1.NumberOfInversions;
-
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.util.List;
-import java.util.stream.Collectors;
 
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;

@@ -1,4 +1,4 @@
-package org.talangsoft.algoritms.week1;
+package org.talangsoft.algorithms.week1;
 
 import java.util.Arrays;
 

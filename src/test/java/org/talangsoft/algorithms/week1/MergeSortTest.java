@@ -1,7 +1,6 @@
 package org.talangsoft.algorithms.week1;
 
 import org.junit.Test;
-import org.talangsoft.algoritms.week1.MergeSort;
 
 import java.util.stream.IntStream;
 
