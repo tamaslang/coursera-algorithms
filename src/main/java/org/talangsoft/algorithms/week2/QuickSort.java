@@ -5,9 +5,7 @@ interface PivotChooseStrategy {
     int choosePivotAndMakeItFirst(int[] array, int left, int right);
 }
 
-
 public class QuickSort {
-
 
     static class ChooseFirstPivot implements PivotChooseStrategy {
         @Override
@@ -26,21 +24,21 @@ public class QuickSort {
 
     static class ChooseMedianPivot implements PivotChooseStrategy {
 
-        private boolean isRightMedian(int[] array, int left, int right, int middle) {
+        private boolean isRightTheMedian(int[] array, int left, int right, int middle) {
             return (array[right - 1] <= Math.max(array[left], array[middle]) && array[right - 1] >= Math.min(array[left], array[middle]));
         }
 
-        private boolean isMiddleMedian(int[] array, int left, int right, int middle) {
+        private boolean isMiddleTheMedian(int[] array, int left, int right, int middle) {
             return (array[middle] <= Math.max(array[left], array[right - 1]) && array[middle] >= Math.min(array[left], array[right - 1]));
         }
 
         @Override
         public int choosePivotAndMakeItFirst(int[] array, int left, int right) {
             int middle = (right - left - 1) / 2 + left;
-            if (isRightMedian(array, left, right, middle)) {
+            if (isRightTheMedian(array, left, right, middle)) {
                 swap(array, left, right - 1);
             }
-            if (isMiddleMedian(array, left, right, middle)) {
+            if (isMiddleTheMedian(array, left, right, middle)) {
                 swap(array, left, middle);
             }
             return array[left];
@@ -70,18 +68,14 @@ public class QuickSort {
         if (left == right) return array;
 
         // count number of computations
-        long computations = Math.max(0, right - left - 1);
-        totalNrOfComputations += computations;
+        totalNrOfComputations += right - left - 1;
 
-        // choose picot element
-        int p = pivotStrategy.choosePivotAndMakeItFirst(array, left, right);
+        // choose pivot element
+        int pivot = pivotStrategy.choosePivotAndMakeItFirst(array, left, right);
         // partition
         int i = left + 1;
         for (int j = left + 1; j < right; j++) {
-            if (array[j] < p) {
-                swap(array, i, j);
-                i++;
-            }
+            if (array[j] < pivot) swap(array, i++, j);
         }
         // swap partition element
         swap(array, left, i - 1);
