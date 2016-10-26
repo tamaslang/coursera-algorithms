@@ -26,7 +26,7 @@ public class RandomizedSelection {
             if (array[j] < pivot) swap(array, i++, j);
         }
         // swap partition element, so it gets to the right position (elementIndex)
-        int elementIndex = (i - 1);
+        int elementIndex = (i-1);
         swap(array, left, elementIndex);
         if (zeroBasedSearchIndex < elementIndex) {
             // element is on the left
