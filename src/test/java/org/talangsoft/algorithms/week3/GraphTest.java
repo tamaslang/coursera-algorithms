@@ -29,12 +29,12 @@ public class GraphTest {
          * |   \|
          * 4----5
          */
-        Map<Integer, Integer[]> graphVerticlesAndAdjacents = new HashMap<>();
-        graphVerticlesAndAdjacents.put(1, new Integer[]{2, 3});
-        graphVerticlesAndAdjacents.put(2, new Integer[]{1, 3, 4, 5});
-        graphVerticlesAndAdjacents.put(3, new Integer[]{1, 2, 5});
-        graphVerticlesAndAdjacents.put(4, new Integer[]{2, 5});
-        graphVerticlesAndAdjacents.put(5, new Integer[]{2, 3, 4});
+        Map<Integer, int[]> graphVerticlesAndAdjacents = new HashMap<>();
+        graphVerticlesAndAdjacents.put(1, new int[]{2, 3});
+        graphVerticlesAndAdjacents.put(2, new int[]{1, 3, 4, 5});
+        graphVerticlesAndAdjacents.put(3, new int[]{1, 2, 5});
+        graphVerticlesAndAdjacents.put(4, new int[]{2, 5});
+        graphVerticlesAndAdjacents.put(5, new int[]{2, 3, 4});
         return Graph.from(graphVerticlesAndAdjacents);
     }
 
@@ -57,9 +57,9 @@ public class GraphTest {
          * 4----5
          */
         assertThat(graph.getVerticles().size(), is(4));
-        assertThat(graph.getAdjacents(1), is(new Integer[]{2, 2}));
-        assertThat(graph.getAdjacents(2), is(new Integer[]{1, 4, 5, 1, 5}));
-        assertThat(graph.getAdjacents(4), is(new Integer[]{2, 5}));
-        assertThat(graph.getAdjacents(5), is(new Integer[]{2, 2, 4})); // TODO order should not matter
+        assertThat(graph.getAdjacents(1), is(new int[]{2, 2}));
+        assertThat(graph.getAdjacents(2), is(new int[]{1, 4, 5, 1, 5}));
+        assertThat(graph.getAdjacents(4), is(new int[]{2, 5}));
+        assertThat(graph.getAdjacents(5), is(new int[]{2, 2, 4})); // TODO order should not matter
     }
 }

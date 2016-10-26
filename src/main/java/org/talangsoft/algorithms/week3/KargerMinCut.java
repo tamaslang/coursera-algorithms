@@ -9,27 +9,23 @@ class Graph {
 
     private Random rnd = new Random();
 
-    private Map<Integer, Integer[]> verticesWithAdjacents;
+    private Map<Integer, int[]> verticesWithAdjacents;
 
-    public Map<Integer, Integer[]> getVerticesWithAdjacents() {
-        return verticesWithAdjacents;
-    }
-
-    public static Graph from(Map<Integer, Integer[]> graphData) {
+    public static Graph from(Map<Integer, int[]> graphData) {
         return new Graph(graphData);
     }
 
-    public Graph(Map<Integer, Integer[]> graphData) {
-        this.verticesWithAdjacents = new HashMap<>();
+    public Graph(Map<Integer, int[]> graphData) {
+        this.verticesWithAdjacents = new HashMap<>(graphData.size());
         for (Integer key : graphData.keySet()) {
-            Integer[] adjacents = graphData.get(key);
-            Integer[] copyOfAdjacents = new Integer[graphData.get(key).length];
+            int[] adjacents = graphData.get(key);
+            int[] copyOfAdjacents = new int[graphData.get(key).length];
             System.arraycopy(adjacents, 0, copyOfAdjacents, 0, copyOfAdjacents.length);
             this.verticesWithAdjacents.put(key, copyOfAdjacents);
         }
     }
 
-    public Integer[] getAdjacents(Integer verticle) {
+    public int[] getAdjacents(Integer verticle) {
         return verticesWithAdjacents.get(verticle);
     }
 
@@ -37,55 +33,52 @@ class Graph {
         return verticesWithAdjacents.keySet();
     }
 
-    public Integer[] getVerticlesArr() {
-        return getVerticles().toArray(new Integer[getVerticles().size()]);
+    public int[] getVerticlesArr() {
+        return getVerticles().stream().mapToInt(s -> s.intValue()).toArray();
     }
 
-    public Integer[] getRandomEdge() {
-        Integer[] vertices = getVerticlesArr();
-        Integer vertex1 = vertices[rnd.nextInt(vertices.length)];
-        Integer[] adjacents = getAdjacents(vertex1);
-        Integer vertex2 = adjacents[rnd.nextInt(adjacents.length)];
-        return new Integer[]{vertex1, vertex2};
+    public int[] getRandomEdge() {
+        int[] vertices = getVerticlesArr();
+        int vertex1 = vertices[rnd.nextInt(vertices.length)];
+        int[] adjacents = getAdjacents(vertex1);
+        int vertex2 = adjacents[rnd.nextInt(adjacents.length)];
+        return new int[]{vertex1, vertex2};
     }
 
-    private Integer[] removeElementFrom(Integer[] source, Integer elementToRemove) {
-        int countOfElement = 0;
+    private int[] removeElementFrom(int[] source, int elementToRemove) {
+        int countOfValidElement = 0;
+        int[] arrWithElementRemoved = new int[source.length];
         for (int i = 0; i < source.length; i++) {
-            if (source[i].equals(elementToRemove)) countOfElement++;
+            if (source[i] != elementToRemove) arrWithElementRemoved[countOfValidElement++] = source[i];
         }
-        Integer[] retVal = new Integer[source.length - countOfElement];
-        int newIndex = 0;
+        int[] retVal = new int[countOfValidElement];
+        System.arraycopy(arrWithElementRemoved, 0, retVal, 0, countOfValidElement);
+        return retVal;
+    }
+
+    private int[] replaceElementFrom(int[] source, int elementToReplace, int newElement) {
+        int[] retVal = new int[source.length];
         for (int i = 0; i < source.length; i++) {
-            if (!source[i].equals(elementToRemove)) retVal[newIndex++] = source[i];
+            retVal[i] = source[i] == elementToReplace ? newElement : source[i];
         }
         return retVal;
     }
 
-    private Integer[] replaceElementFrom(Integer[] source, Integer elementToReplace, Integer newElement) {
-        Integer[] retVal = new Integer[source.length];
-        for (int i = 0; i < source.length; i++) {
-            retVal[i] = source[i].equals(elementToReplace) ? newElement : source[i];
-        }
-        return retVal;
-    }
-
-    public void mergeEdge(Integer a, Integer b) {
-        Integer[] adjecentsOfA = verticesWithAdjacents.remove(a);
-        Integer[] adjacentsOfB = verticesWithAdjacents.remove(b);
+    public void mergeEdge(int a, int b) {
+        int[] adjecentsOfA = verticesWithAdjacents.remove(a);
+        int[] adjacentsOfB = verticesWithAdjacents.remove(b);
         // remove A from adjacents of B
-        // adjacentsOfB.removeIf(vertex -> vertex.equals(edge.a));
-        Integer[] adjacentsOfBWithoutA = removeElementFrom(adjacentsOfB, a);
+        int[] adjacentsOfBWithoutA = removeElementFrom(adjacentsOfB, a);
         // Connect all node from adjacents of B to A instead of B
         for (int i = 0; i < adjacentsOfBWithoutA.length; i++) {
-            Integer vertex = adjacentsOfBWithoutA[i];
-            Integer[] adjecentsOfVertexWithBInsteadOfA = replaceElementFrom(verticesWithAdjacents.remove(vertex), b, a);
+            int vertex = adjacentsOfBWithoutA[i];
+            int[] adjecentsOfVertexWithBInsteadOfA = replaceElementFrom(verticesWithAdjacents.remove(vertex), b, a);
             verticesWithAdjacents.put(vertex, adjecentsOfVertexWithBInsteadOfA);
         }
         // remove B from adjacents of A
-        Integer[] adjacentsOfAWithoutB = removeElementFrom(adjecentsOfA, b);
+        int[] adjacentsOfAWithoutB = removeElementFrom(adjecentsOfA, b);
         // add all adjacents of B to A
-        Integer[] combinedAdjacentsOfA = new Integer[adjacentsOfBWithoutA.length + adjacentsOfAWithoutB.length];
+        int[] combinedAdjacentsOfA = new int[adjacentsOfBWithoutA.length + adjacentsOfAWithoutB.length];
         System.arraycopy(adjacentsOfAWithoutB, 0, combinedAdjacentsOfA, 0, adjacentsOfAWithoutB.length);
         System.arraycopy(adjacentsOfBWithoutA, 0, combinedAdjacentsOfA, adjacentsOfAWithoutB.length, adjacentsOfBWithoutA.length);
         verticesWithAdjacents.put(a, combinedAdjacentsOfA);
@@ -95,7 +88,7 @@ class Graph {
 public class KargerMinCut {
     public int cut(Graph graph) {
         while (graph.getVerticles().size() != 2) {
-            Integer[] randomEdge = graph.getRandomEdge();
+            int[] randomEdge = graph.getRandomEdge();
             graph.mergeEdge(randomEdge[0], randomEdge[1]);
         }
         return graph.getAdjacents(graph.getVerticlesArr()[0]).length;
