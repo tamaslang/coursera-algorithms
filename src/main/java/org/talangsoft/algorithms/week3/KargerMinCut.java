@@ -1,102 +1,103 @@
 package org.talangsoft.algorithms.week3;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Random;
+import java.util.Set;
 
-class Graph<T> {
+class Graph {
 
     private Random rnd = new Random();
 
-    class Edge<T> {
-        private T a, b;
+    private Map<Integer, Integer[]> verticesWithAdjacents;
 
-        public Edge(T a, T b) {
-            this.a = a;
-            this.b = b;
-        }
-
-    }
-
-    private Map<T, List<T>> verticesWithAdjacents;
-
-    public Map<T, List<T>> getVerticesWithAdjacents() {
+    public Map<Integer, Integer[]> getVerticesWithAdjacents() {
         return verticesWithAdjacents;
     }
 
-    public static <T> Graph from(Map<T, List<T>> graphData) {
+    public static Graph from(Map<Integer, Integer[]> graphData) {
         return new Graph(graphData);
     }
 
-    public Graph(Map<T, List<T>> graphData) {
+    public Graph(Map<Integer, Integer[]> graphData) {
         this.verticesWithAdjacents = new HashMap<>();
-        for (T key : graphData.keySet()) {
-            List<T> connectedEdges = new LinkedList<T>();
-            connectedEdges.addAll(graphData.get(key));
-            this.verticesWithAdjacents.put(key, connectedEdges);
+        for (Integer key : graphData.keySet()) {
+            Integer[] adjacents = graphData.get(key);
+            Integer[] copyOfAdjacents = new Integer[graphData.get(key).length];
+            System.arraycopy(adjacents, 0, copyOfAdjacents, 0, copyOfAdjacents.length);
+            this.verticesWithAdjacents.put(key, copyOfAdjacents);
         }
     }
 
-    public List<T> getAdjacents(T verticle) {
+    public Integer[] getAdjacents(Integer verticle) {
         return verticesWithAdjacents.get(verticle);
     }
 
-    public void setAdjacents(T verticle, List<T> newAdjacents) {
-        verticesWithAdjacents.put(verticle, newAdjacents);
-    }
-
-    public void removeVertex(T verticle) {
-        verticesWithAdjacents.remove(verticle);
-    }
-
-    public Set<T> getVerticles() {
+    public Set<Integer> getVerticles() {
         return verticesWithAdjacents.keySet();
     }
 
-    public T[] getVerticlesArr() {
-        return (T[]) getVerticles().toArray();
+    public Integer[] getVerticlesArr() {
+        return getVerticles().toArray(new Integer[getVerticles().size()]);
     }
 
-    public Edge<T> getRandomEdge() {
-        T[] vertices = getVerticlesArr();
-        T vertex1 = vertices[rnd.nextInt(vertices.length)];
-        List<T> adjacents = getAdjacents(vertex1);
-        T vertex2 = adjacents.get(rnd.nextInt(adjacents.size()));
-        return new Edge<T>(vertex1, vertex2);
+    public Integer[] getRandomEdge() {
+        Integer[] vertices = getVerticlesArr();
+        Integer vertex1 = vertices[rnd.nextInt(vertices.length)];
+        Integer[] adjacents = getAdjacents(vertex1);
+        Integer vertex2 = adjacents[rnd.nextInt(adjacents.length)];
+        return new Integer[]{vertex1, vertex2};
     }
 
-
-    public void mergeEdge(Edge<T> edge) {
-        List<T> adjecentsOfA = verticesWithAdjacents.remove(edge.a);
-        List<T> adjacentsOfB = verticesWithAdjacents.remove(edge.b);
-        // remove A from adjacents of B
-        adjacentsOfB.removeIf(vertex -> vertex.equals(edge.a));
-        // Connect all node from adjacents of B to A instead of B
-        adjacentsOfB.stream().forEach(vertex -> {
-            replaceAdjacentWithAwithB(vertex, edge.a, edge.b);
-        });
-        // remove B from adjacents of A
-        adjecentsOfA.removeIf(vertex -> vertex.equals(edge.b));
-        // add all adjacents of B to A
-        adjecentsOfA.addAll(adjacentsOfB);
-        verticesWithAdjacents.put(edge.a, adjecentsOfA);
-    }
-
-    private void replaceAdjacentWithAwithB(T vertex, T a, T b) {
-        List<T> adjacencyList = verticesWithAdjacents.get(vertex);
-        int initialSize = adjacencyList.size();
-        adjacencyList.removeIf(value -> value.equals(b));
-        int toAdd = initialSize - adjacencyList.size();
-        for (int i = 0; i < toAdd; i++) {
-            adjacencyList.add(a);
+    private Integer[] removeElementFrom(Integer[] source, Integer elementToRemove) {
+        int countOfElement = 0;
+        for (int i = 0; i < source.length; i++) {
+            if (source[i].equals(elementToRemove)) countOfElement++;
         }
+        Integer[] retVal = new Integer[source.length - countOfElement];
+        int newIndex = 0;
+        for (int i = 0; i < source.length; i++) {
+            if (!source[i].equals(elementToRemove)) retVal[newIndex++] = source[i];
+        }
+        return retVal;
+    }
+
+    private Integer[] replaceElementFrom(Integer[] source, Integer elementToReplace, Integer newElement) {
+        Integer[] retVal = new Integer[source.length];
+        for (int i = 0; i < source.length; i++) {
+            retVal[i] = source[i].equals(elementToReplace) ? newElement : source[i];
+        }
+        return retVal;
+    }
+
+    public void mergeEdge(Integer a, Integer b) {
+        Integer[] adjecentsOfA = verticesWithAdjacents.remove(a);
+        Integer[] adjacentsOfB = verticesWithAdjacents.remove(b);
+        // remove A from adjacents of B
+        // adjacentsOfB.removeIf(vertex -> vertex.equals(edge.a));
+        Integer[] adjacentsOfBWithoutA = removeElementFrom(adjacentsOfB, a);
+        // Connect all node from adjacents of B to A instead of B
+        for (int i = 0; i < adjacentsOfBWithoutA.length; i++) {
+            Integer vertex = adjacentsOfBWithoutA[i];
+            Integer[] adjecentsOfVertexWithBInsteadOfA = replaceElementFrom(verticesWithAdjacents.remove(vertex), b, a);
+            verticesWithAdjacents.put(vertex, adjecentsOfVertexWithBInsteadOfA);
+        }
+        // remove B from adjacents of A
+        Integer[] adjacentsOfAWithoutB = removeElementFrom(adjecentsOfA, b);
+        // add all adjacents of B to A
+        Integer[] combinedAdjacentsOfA = new Integer[adjacentsOfBWithoutA.length + adjacentsOfAWithoutB.length];
+        System.arraycopy(adjacentsOfAWithoutB, 0, combinedAdjacentsOfA, 0, adjacentsOfAWithoutB.length);
+        System.arraycopy(adjacentsOfBWithoutA, 0, combinedAdjacentsOfA, adjacentsOfAWithoutB.length, adjacentsOfBWithoutA.length);
+        verticesWithAdjacents.put(a, combinedAdjacentsOfA);
     }
 }
 
-public class KargerMinCut<T> {
-    public int cut(Graph<T> graph) {
+public class KargerMinCut {
+    public int cut(Graph graph) {
         while (graph.getVerticles().size() != 2) {
-            Graph.Edge randomEdge = graph.getRandomEdge();
-            graph.mergeEdge(randomEdge);
+            Integer[] randomEdge = graph.getRandomEdge();
+            graph.mergeEdge(randomEdge[0], randomEdge[1]);
         }
-        return graph.getAdjacents(graph.getVerticlesArr()[0]).size();
+        return graph.getAdjacents(graph.getVerticlesArr()[0]).length;
     }
 }

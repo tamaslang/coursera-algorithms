@@ -29,22 +29,20 @@ public class GraphTest {
          * |   \|
          * 4----5
          */
-        Map<Integer, List<Integer>> graphVerticlesAndAdjacents = new HashMap<>();
-        graphVerticlesAndAdjacents.put(1, Arrays.asList(new Integer[]{2, 3}));
-        graphVerticlesAndAdjacents.put(2, Arrays.asList(new Integer[]{1, 3, 4, 5}));
-        graphVerticlesAndAdjacents.put(3, Arrays.asList(new Integer[]{1, 2, 5}));
-        graphVerticlesAndAdjacents.put(4, Arrays.asList(new Integer[]{2, 5}));
-        graphVerticlesAndAdjacents.put(5, Arrays.asList(new Integer[]{2, 3, 4}));
+        Map<Integer, Integer[]> graphVerticlesAndAdjacents = new HashMap<>();
+        graphVerticlesAndAdjacents.put(1, new Integer[]{2, 3});
+        graphVerticlesAndAdjacents.put(2, new Integer[]{1, 3, 4, 5});
+        graphVerticlesAndAdjacents.put(3, new Integer[]{1, 2, 5});
+        graphVerticlesAndAdjacents.put(4, new Integer[]{2, 5});
+        graphVerticlesAndAdjacents.put(5, new Integer[]{2, 3, 4});
         return Graph.from(graphVerticlesAndAdjacents);
     }
 
 
     @Test
     public void testMerge() {
-        Graph<Integer> graph =getGraph1();
-        Graph.Edge mergeThis = graph.new Edge<Integer>(2,3);
-
-        graph.mergeEdge(mergeThis);
+        Graph graph =getGraph1();
+        graph.mergeEdge(2,3);
         /**
          * expected graph:
          *
@@ -59,9 +57,9 @@ public class GraphTest {
          * 4----5
          */
         assertThat(graph.getVerticles().size(), is(4));
-        assertThat(graph.getAdjacents(1), is(Arrays.asList(new Integer[]{2, 2})));
-        assertThat(graph.getAdjacents(2), is(Arrays.asList(new Integer[]{1, 4, 5, 1, 5})));
-        assertThat(graph.getAdjacents(4), is(Arrays.asList(new Integer[]{2, 5})));
-        assertThat(graph.getAdjacents(5), is(Arrays.asList(new Integer[]{2, 4, 2}))); // TODO order should not matter
+        assertThat(graph.getAdjacents(1), is(new Integer[]{2, 2}));
+        assertThat(graph.getAdjacents(2), is(new Integer[]{1, 4, 5, 1, 5}));
+        assertThat(graph.getAdjacents(4), is(new Integer[]{2, 5}));
+        assertThat(graph.getAdjacents(5), is(new Integer[]{2, 2, 4})); // TODO order should not matter
     }
 }

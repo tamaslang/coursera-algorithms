@@ -32,7 +32,6 @@ public class RandomizedSelectionTest {
         assertThat(underTest.selectNthSmallestElement(new int[]{8, 7, 6, 5, 4, 3, 2, 1}, 3), is(3));
     }
 
-
     @Test
     public void shouldSelect3rdSmallestElementFromReverseSortedArrayWithOddElements() {
         assertThat(underTest.selectNthSmallestElement(new int[]{9, 8, 7, 6, 5, 4, 3, 2, 1}, 3), is(3));
