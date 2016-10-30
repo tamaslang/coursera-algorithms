@@ -12,6 +12,8 @@ public class KargerMinCutTest {
 
     private String graphSourceFile = "week3/parse_graph_test.txt";
 
+    private String recursiveGraphSourceFile = "week3/recursive_graph.txt";
+
     private String week3GraphSourceFile = "week3/karger_mincut.txt";
 
     private KargerMinCut kargerMinCut = new KargerMinCut();
@@ -20,7 +22,7 @@ public class KargerMinCutTest {
     public void solveTheProblemOfWeek3With1IterationTest() throws Exception {
         int nrOfIterations = 100;
         Integer minCut = Integer.MAX_VALUE;
-        Map<Integer, int[]> week3GraphData = InputFileReader.readGraphElements(week3GraphSourceFile);
+        Map<Integer, int[]> week3GraphData = InputFileReader.readGraphElementsWithFormatOfNodesAndAdjacentsList(week3GraphSourceFile);
 
         long before = System.currentTimeMillis();
         for (int i = 0; i < nrOfIterations; i++) {
@@ -33,7 +35,7 @@ public class KargerMinCutTest {
         }
         long after = System.currentTimeMillis();
 
-        System.out.println(String.format("Execution for number %d took time %dms", nrOfIterations, (after - before)));
+        System.out.println(String.format("Execution for number %d took %dms", nrOfIterations, (after - before)));
 
         assertThat(minCut, is(17));
     }
@@ -42,8 +44,19 @@ public class KargerMinCutTest {
 
 
     @Test
+    public void cutRecursiveGraphTest() throws Exception {
+        Map<Integer, int[]> recursiveGraphData = InputFileReader.readGraphElementsWithFormatOfNodesAndAdjacentsList(recursiveGraphSourceFile);
+        int nrOfIterations = 100;
+        Graph.from(recursiveGraphData).mergeEdge(3,1);
+        for (int i = 0; i < nrOfIterations; i++) {
+            kargerMinCut.cut(Graph.from(recursiveGraphData));
+        }
+
+    }
+
+    @Test
     public void parseGraphSourceFileTest() throws Exception {
-        Map<Integer, int[]> graph = InputFileReader.readGraphElements(graphSourceFile);
+        Map<Integer, int[]> graph = InputFileReader.readGraphElementsWithFormatOfNodesAndAdjacentsList(graphSourceFile);
         assertThat(graph.size(), is(2));
         assertThat(graph.get(1), is(new int[]{37, 79, 164}));
         assertThat(graph.get(2), is(new int[]{123, 134, 10, 141}));
