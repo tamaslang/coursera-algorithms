@@ -5,6 +5,7 @@ import org.talangsoft.algorithms.helper.InputFileReader;
 
 import java.util.Map;
 
+import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -14,20 +15,23 @@ public class WeightedGraphTest {
 
     @Test
     public void readSourceFileWithExampleGraph() throws Exception {
-        Map<Integer, int[][]> graph = InputFileReader.readDirectedWeightedGraph(weightedGraphSourceFile);
+        Map<Integer, int[][]> graphData = InputFileReader.readDirectedWeightedGraph(weightedGraphSourceFile);
 
-        assertThat(graph.get(1), is(new int[][]{{3, 9}}));
-        assertThat(graph.get(2), is(new int[][]{{1, 3}, {5, 4}}));
-        assertThat(graph.get(3), is(new int[][]{{2, 4}, {5, 11}}));
-        assertThat(graph.get(4), is(new int[][]{{2, 7}}));
-        assertThat(graph.get(5), is(new int[][]{{4, 8}}));
+        assertThat(graphData.get(1), is(new int[][]{{3, 9}}));
+        assertThat(graphData.get(2), is(new int[][]{{1, 3}, {5, 4}}));
+        assertThat(graphData.get(3), is(new int[][]{{2, 4}, {5, 11}}));
+        assertThat(graphData.get(4), is(new int[][]{{2, 7}}));
+        assertThat(graphData.get(5), is(new int[][]{{4, 8}}));
+
+        WeightedDirectedGraph graph = new WeightedDirectedGraph(graphData);
+        // TODO assert on size of vertices
     }
 
     @Test
     public void readSourceFileWithAssignmentGraph() throws Exception {
-        Map<Integer, int[][]> graph = InputFileReader.readDirectedWeightedGraph(assignmentGraphSourceFile);
+        Map<Integer, int[][]> graphData = InputFileReader.readDirectedWeightedGraph(assignmentGraphSourceFile);
 
-        assertThat(graph.get(1), is(new int[][]{
+        assertThat(graphData.get(1), is(new int[][]{
                 {80, 982}, {163, 8164}, {170, 2620}, {145, 648},
                 {200, 8021}, {173, 2069}, {92, 647}, {26, 4122},
                 {140, 546}, {11, 1913}, {160, 6461}, {27, 7905},
@@ -36,6 +40,9 @@ public class WeightedGraphTest {
                 {99, 2367}, {138, 7896}, {169, 8700}, {49, 2437},
                 {125, 2909}, {117, 2597}, {55, 6399}
         }));
+
+        WeightedDirectedGraph graph = new WeightedDirectedGraph(graphData);
+        // TODO assert on size of vertices
     }
 }
 
