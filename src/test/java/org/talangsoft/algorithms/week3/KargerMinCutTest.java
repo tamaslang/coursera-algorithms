@@ -22,7 +22,7 @@ public class KargerMinCutTest {
     public void solveTheProblemOfWeek3With1IterationTest() throws Exception {
         int nrOfIterations = 100;
         Integer minCut = Integer.MAX_VALUE;
-        Map<Integer, int[]> week3GraphData = InputFileReader.readGraphElementsWithFormatOfNodesAndAdjacentsList(week3GraphSourceFile);
+        Map<Integer, int[]> week3GraphData = InputFileReader.readGraphOfNodesAndAdjacentsList(week3GraphSourceFile);
 
         long before = System.currentTimeMillis();
         for (int i = 0; i < nrOfIterations; i++) {
@@ -45,7 +45,7 @@ public class KargerMinCutTest {
 
     @Test
     public void cutRecursiveGraphTest() throws Exception {
-        Map<Integer, int[]> recursiveGraphData = InputFileReader.readGraphElementsWithFormatOfNodesAndAdjacentsList(recursiveGraphSourceFile);
+        Map<Integer, int[]> recursiveGraphData = InputFileReader.readGraphOfNodesAndAdjacentsList(recursiveGraphSourceFile);
         int nrOfIterations = 100;
         Graph.from(recursiveGraphData).mergeEdge(3,1);
         for (int i = 0; i < nrOfIterations; i++) {
@@ -56,7 +56,7 @@ public class KargerMinCutTest {
 
     @Test
     public void parseGraphSourceFileTest() throws Exception {
-        Map<Integer, int[]> graph = InputFileReader.readGraphElementsWithFormatOfNodesAndAdjacentsList(graphSourceFile);
+        Map<Integer, int[]> graph = InputFileReader.readGraphOfNodesAndAdjacentsList(graphSourceFile);
         assertThat(graph.size(), is(2));
         assertThat(graph.get(1), is(new int[]{37, 79, 164}));
         assertThat(graph.get(2), is(new int[]{123, 134, 10, 141}));

@@ -15,7 +15,7 @@ public class GraphTest {
     @Test
     public void readWeek4Graph() throws Exception{
         long before = System.currentTimeMillis();
-        Map<Integer, int[]> week4GraphData = InputFileReader.readGraphElementsFormatOfAtoBEdges(graphSourceFile);
+        Map<Integer, int[]> week4GraphData = InputFileReader.readDirectedGraphElementsFormatOfAtoBEdges(graphSourceFile);
 
         long after = System.currentTimeMillis();
         System.out.println(String.format("Reading input file '%s' with vertices %d took %dms", graphSourceFile,week4GraphData.size(), (after - before)));

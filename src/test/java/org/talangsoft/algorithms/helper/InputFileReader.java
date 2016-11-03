@@ -14,13 +14,37 @@ public class InputFileReader {
 
 
     private static final String TAB = "\t";
+    private static final String COMA = ",";
     private static final String SPACE = " ";
 
     private static int[] strArrToIntArrWithoutHead(String[] strArr) {
         return Arrays.asList(Arrays.copyOfRange(strArr, 1, strArr.length)).stream().mapToInt(Integer::parseInt).toArray();
     }
 
-    public static Map<Integer, int[]> readGraphElementsWithFormatOfNodesAndAdjacentsList(String sourceFile) throws Exception {
+    /**
+     * Reads graph data from source file with vertex and adjacency list.
+     *
+     *    1
+     *  /  \
+     * /    \
+     * 2 -- 3
+     * | \  |
+     * |  \ |
+     * |   \|
+     * 4----5
+     *
+     * Defined as lines with format:
+     * 1 2 3
+     * 2 1 3 4 5
+     * 3 1 2 5
+     * 4 2 5
+     * 5 2 3 4
+     *
+     * @param sourceFile
+     * @return
+     * @throws Exception
+     */
+    public static Map<Integer, int[]> readGraphOfNodesAndAdjacentsList(String sourceFile) throws Exception {
         // reading lines
         ClassLoader classLoader = InputFileReader.class.getClassLoader();
         java.net.URL url = classLoader.getResource(sourceFile);
@@ -29,7 +53,33 @@ public class InputFileReader {
         return lines.stream().map(line -> line.split(TAB)).collect(Collectors.toMap(lineValues -> new Integer(lineValues[0]), lineValues -> strArrToIntArrWithoutHead(lineValues)));
     }
 
-    public static Map<Integer, int[]> readGraphElementsFormatOfAtoBEdges(String sourceFile) throws Exception {
+    /**
+     * Reads directed graph data from source file with format A to B edges.
+     * Graph: @ is the arrow direction
+     *
+     *    1
+     *  @  \
+     * /    @
+     * 2 @- 3
+     * @ \  |
+     * |  \ |
+     * |   @@
+     * 4@---5
+     *
+     * Defined as lines with format:
+     * 1 3
+     * 2 1
+     * 2 5
+     * 3 2
+     * 3 5
+     * 4 2
+     * 5 4
+     *
+     * @param sourceFile
+     * @return
+     * @throws Exception
+     */
+    public static Map<Integer, int[]> readDirectedGraphElementsFormatOfAtoBEdges(String sourceFile) throws Exception {
         // reading lines
         ClassLoader classLoader = InputFileReader.class.getClassLoader();
         java.net.URL url = classLoader.getResource(sourceFile);
@@ -56,5 +106,52 @@ public class InputFileReader {
         }
         return nodesAndAdjacentsArr;
     }
+
+    /**
+     * Reads weighted directed graph from source file with format vertex and adjacency list with weights
+     * Graph: @ is the arrow direction and the wieghts are in parenthesis
+     *         1
+     *       @  \
+     *  (3) /    \ (9)
+     *     / (4)  @
+     *    2 @-----3
+     *    @ \     |
+     *    |   \(4)| (11)
+     * (7)|     \ |
+     *    |      @@
+     *    4@------5
+     *       (8)
+     * Defined as lines with format:
+     * 1 3,9
+     * 2 1,3 5,4
+     * 3 2,4 5,11
+     * 4 2,7
+     * 5 4,8
+     *
+     * @param sourceFile
+     * @return
+     * @throws Exception
+     */
+    public static Map<Integer, int[][]> readDirectedWeightedGraph(String sourceFile) throws Exception {
+        // reading lines
+        ClassLoader classLoader = InputFileReader.class.getClassLoader();
+        java.net.URL url = classLoader.getResource(sourceFile);
+        java.nio.file.Path resPath = java.nio.file.Paths.get(url.toURI());
+        List<String> lines = java.nio.file.Files.readAllLines(resPath);
+        return lines.stream().map(line -> line.split(TAB)).collect(
+                Collectors.toMap(lineValues -> new Integer(lineValues[0]),
+                        lineValues -> strArrToWeightedIntArrWithoutHead(lineValues)));
+    }
+
+    private static int[] strArrToIntArr(String[] strArr){
+        return Arrays.stream(strArr).mapToInt(Integer::parseInt).toArray();
+    }
+
+    private static int[][] strArrToWeightedIntArrWithoutHead(String[] strArr) {
+        return Arrays.asList(Arrays.copyOfRange(strArr, 1, strArr.length)).stream()
+                .map(weightedTarget -> weightedTarget.split(COMA))
+                .map(targetAndWeight -> strArrToIntArr(targetAndWeight)).toArray(int[][]::new);
+    }
+
 
 }

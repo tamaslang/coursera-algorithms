@@ -23,7 +23,7 @@ public class StrongComponentsTest {
     @Test
     public void readWeek4LectureGraphGraph() throws Exception {
         long before = System.currentTimeMillis();
-        Map<Integer, int[]> week4GraphData = InputFileReader.readGraphElementsFormatOfAtoBEdges(lectureGraphSourceFile);
+        Map<Integer, int[]> week4GraphData = InputFileReader.readDirectedGraphElementsFormatOfAtoBEdges(lectureGraphSourceFile);
 
         long after = System.currentTimeMillis();
         System.out.println(String.format("Reading input file '%s' with vertices %d took %dms", lectureGraphSourceFile, week4GraphData.size(), (after - before)));
@@ -33,21 +33,21 @@ public class StrongComponentsTest {
 
     @Test
     public void strongComponent4LectureGraph() throws Exception {
-        Map<Integer, int[]> week4GraphData = InputFileReader.readGraphElementsFormatOfAtoBEdges(lectureGraphSourceFile);
+        Map<Integer, int[]> week4GraphData = InputFileReader.readDirectedGraphElementsFormatOfAtoBEdges(lectureGraphSourceFile);
         List<Integer> strongComponentSizes = underTest.strongComponent(week4GraphData);
         assertThat(getComponentSizes(strongComponentSizes), is("3,3,3"));
     }
 
     @Test
     public void strongComponent4LectureGraphNoIndexNrs() throws Exception {
-        Map<Integer, int[]> week4GraphData = InputFileReader.readGraphElementsFormatOfAtoBEdges(lectureGraphNoIndexNrsSourceFile);
+        Map<Integer, int[]> week4GraphData = InputFileReader.readDirectedGraphElementsFormatOfAtoBEdges(lectureGraphNoIndexNrsSourceFile);
         List<Integer> strongComponentSizes = underTest.strongComponent(week4GraphData);
         assertThat(getComponentSizes(strongComponentSizes), is("3,3,1,1,1"));
     }
 
     @Test
     public void strongComponent4AssignmentGraph() throws Exception {
-        Map<Integer, int[]> week4Assignment = InputFileReader.readGraphElementsFormatOfAtoBEdges(assignmentGraphSourceFile);
+        Map<Integer, int[]> week4Assignment = InputFileReader.readDirectedGraphElementsFormatOfAtoBEdges(assignmentGraphSourceFile);
         List<Integer> strongComponentSizes = underTest.strongComponent(week4Assignment);
         assertThat(getComponentSizes(strongComponentSizes, 5), is("434821,968,459,313,211"));
     }
