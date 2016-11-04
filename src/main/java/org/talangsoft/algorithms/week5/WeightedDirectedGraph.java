@@ -72,13 +72,18 @@ public class WeightedDirectedGraph {
             int[][] neighboursWithDistances = getAdjacents(minimumVertex.getKey());
             // calculate distances to neighbours
             for (int[] neighbourAndDistance : neighboursWithDistances) {
-                if (unvisitedQ.containsKey(neighbourAndDistance[0])) {
+                if (vertexIsUnvisitedWithSmallerValue(unvisitedQ, neighbourAndDistance, minimumVertex.getValue())) {
                     unvisitedQ.put(neighbourAndDistance[0], minimumVertex.getValue() + neighbourAndDistance[1]);
                 }
             }
         }
 
         return visitedV;
+    }
+
+    private boolean vertexIsUnvisitedWithSmallerValue(Map<Integer, Integer> unvisitedQ, int[] vertexWithDistance, int currentMinVertexValue) {
+        return unvisitedQ.containsKey(vertexWithDistance[0]) &&
+                unvisitedQ.get(vertexWithDistance[0]) > currentMinVertexValue + vertexWithDistance[1];
     }
 
 }

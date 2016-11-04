@@ -16,6 +16,7 @@ public class WeightedGraphTest {
     private String testcase1GraphSourceFile = "week5/forum_testcase1.txt";
     private String testcase2GraphSourceFile = "week5/forum_testcase2.txt";
     private String testcase3GraphSourceFile = "week5/forum_testcase3.txt";
+    private String testcase4GraphSourceFile = "week5/forum_testcase4.txt";
 
     @Test
     public void readSourceFileWithExampleGraph() throws Exception {
@@ -52,7 +53,7 @@ public class WeightedGraphTest {
         // find shortest paths from edge '1'
         Map<Integer, Integer> shortestPaths = graph.shortestPathsWithDijkstra(1);
         assertThat(shortestPaths.get(1), is(0));
-        assertThat(shortestPaths.get(200), is(4487));
+        assertThat(shortestPaths.get(200), is(2060));
 
     }
 
@@ -65,7 +66,7 @@ public class WeightedGraphTest {
         Map<Integer, Integer> shortestPaths = graph.shortestPathsWithDijkstra(1);
         int[] vertices = new int[]{7,37,59,82,99,115,133,165,188,197};
         String[] distancesForVertices = Arrays.stream(vertices).mapToObj(vertex -> shortestPaths.get(vertex).toString()).toArray(String[]::new);
-        assertThat(String.join(",",distancesForVertices), is("13374,2610,6094,10341,6765,16786,2029,2442,2505,9831"));
+        assertThat(String.join(",",distancesForVertices), is("2599,2610,2947,2052,2367,2399,2029,2442,2505,3068"));
 
 
     }
@@ -94,7 +95,7 @@ public class WeightedGraphTest {
         6 4 [8, 7, 6]
         7 3 [8, 7]
         8 2 [8]
-         */
+        */
     }
 
     @Test
@@ -142,24 +143,23 @@ public class WeightedGraphTest {
         assertThat(shortestPathFromVertex1.get(8), is(6));
         assertThat(shortestPathFromVertex1.get(9), is(8));
         assertThat(shortestPathFromVertex1.get(10), is(4));
-
-//        To vertex: 1, length: 0
-//        To vertex: 2, length: 3
-//        To vertex: 3, length: 2
-//        To vertex: 4, length: 6
-//        To vertex: 5, length: 9
-//        To vertex: 6, length: 4
-//        To vertex: 7, length: 4
-//        To vertex: 8, length: 6
-//        To vertex: 9, length: 8
-//        To vertex: 10, length: 4
-
-
-
     }
 
     @Test
-    public void testWeek4ExampleGraph() throws Exception {
+    public void testcase4graph() throws Exception{
+        Map<Integer, int[][]> graphData = InputFileReader.readDirectedWeightedGraph(testcase4GraphSourceFile);
+        WeightedDirectedGraph graph = new WeightedDirectedGraph(graphData);
+
+        Map<Integer, Integer> shortestPathFromVertex1 = graph.shortestPathsWithDijkstra(1);
+        assertThat(shortestPathFromVertex1.get(1), is(0));
+        assertThat(shortestPathFromVertex1.get(2), is(1));
+        assertThat(shortestPathFromVertex1.get(3), is(3));
+        assertThat(shortestPathFromVertex1.get(4), is(2));
+        assertThat(shortestPathFromVertex1.get(5), is(2147483647)); // no path
+    }
+
+    @Test
+    public void testWeek5ExampleGraph() throws Exception {
         /**
          *
          *          ---@2 ---
