@@ -12,6 +12,14 @@ public class InputFileReader {
         return java.nio.file.Files.readAllLines(resPath).stream().mapToInt(Integer::valueOf).toArray();
     }
 
+    public static long[] readLongElements(String sourceFile) throws Exception {
+        // reading lines
+        ClassLoader classLoader = InputFileReader.class.getClassLoader();
+        java.net.URL url = classLoader.getResource(sourceFile);
+        java.nio.file.Path resPath = java.nio.file.Paths.get(url.toURI());
+        return java.nio.file.Files.readAllLines(resPath).stream().mapToLong(Long::valueOf).toArray();
+    }
+
 
     private static final String TAB = "\t";
     private static final String COMA = ",";
