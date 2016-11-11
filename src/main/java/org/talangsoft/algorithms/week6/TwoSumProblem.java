@@ -52,12 +52,20 @@ public class TwoSumProblem {
     public boolean findTwoSumNaiveWithHash(long[] numbers, Map<Long, Long> numberMap, long sum) {
         for (long nr : numbers) {
             if (numberMap.containsKey(sum - nr)) {
-                //System.out.println(String.format("Pair %d %d",nr,sum - nr));
+               // System.out.println(String.format("Pair %d %d -> %d",nr,sum - nr, sum));
                 return true;
             }
         }
         return false;
     }
 
+    public boolean findTwoSumNaiveWithHashNegativePositive(long[] positiveNumbers, Map<Long, Long>  negativeNumbers, long sum) {
+        for (long nr : positiveNumbers) {
+            if (negativeNumbers.containsKey(sum - nr)) {
+                return true;
+            }
+        }
+        return false;
+    }
 
 }
