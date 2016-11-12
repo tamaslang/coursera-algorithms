@@ -1,5 +1,6 @@
 package org.talangsoft.algorithms.week6;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.talangsoft.algorithms.helper.InputFileReader;
 
@@ -17,33 +18,39 @@ public class TwoSumProblemTest {
     private String week6AssignmentPartA = "week6/twosum_numbers.txt";
 
 
-
     @Test
     public void solveWeek6AssignmentPartAWithDomainKnowledgeII() throws Exception {
-        // Improvement II.: can we eliminate loop -10000 - 10000
+        // Improvement II.: can we eliminate loop -10000 - 10000?
         // idea: find all numbers within the given range
         // - divide to 2 (positives and negatives)
-        // - sort negatives
-
+        // - put negatives to treeset (sorted)
+        //
         // - loop 1 to length(positives)
         // - get the index of the first number in negatives that abs is greater or equal n-10000
         // - get the index of the first number in negatives that abs is smaller or equal n+10000
         // - add the difference of the indexes, the value is the count of the numbers that meet the criteria
+        //
+        // performs: 1747ms
         long[] numbers = InputFileReader.readLongElements(week6AssignmentPartA);
         long[] positives = Arrays.stream(numbers).filter(nr -> nr >= 0).toArray(); // 500010 positive
         long[] negatives = Arrays.stream(numbers).filter(nr -> nr < 0).toArray();  // 499990 negative
         // TODO: solve!
-        int count = 0;
+        long before = System.currentTimeMillis();
+
+        int count = underTest.findTwoSumNumberForSumsInInterval(numbers, 10000);
+
+        long after = System.currentTimeMillis();
+        System.out.println(String.format("Finding 2SUM for assignment took %dms", (after - before)));
 
         assertThat(count, is(427));
     }
 
     @Test
-    //@Ignore("it takes too much time (418194ms -> 418sec)")
+    @Ignore("it takes too much time (418194ms -> 418sec)")
     public void solveWeek6AssignmentPartAWithDomainKnowledgeI() throws Exception {
         // with knowing the input, we know that the smallest abs number is 808434
         // so to find the numbers which sums up to a number in range -10000..10000
-        // Improvement I.: 1 number should be negative the other should be positive
+        // Improvement I.: first number should be negative the other should be positive
         long[] numbers = InputFileReader.readLongElements(week6AssignmentPartA);
         long[] positives = Arrays.stream(numbers).filter(nr -> nr >= 0).toArray(); // 500010 positive
         long[] negatives = Arrays.stream(numbers).filter(nr -> nr < 0).toArray();  // 499990 negative
@@ -64,7 +71,7 @@ public class TwoSumProblemTest {
     }
 
     @Test
-    //@Ignore("it takes too much time (893099ms -> 893sec)")
+    @Ignore("it takes too much time (893099ms -> 893sec)")
     public void solveWeek6AssignmentPartA() throws Exception {
         long[] numbers = InputFileReader.readLongElements(week6AssignmentPartA);
         assertThat(numbers.length, is(1_000_000));
