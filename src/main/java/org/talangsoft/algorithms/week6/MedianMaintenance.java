@@ -14,10 +14,10 @@ import java.util.Optional;
  */
 
 
-public class Median {
+public class MedianMaintenance {
 
-    private Heap<Integer> low = new Heap(Heap.MAX);
-    private Heap<Integer> high = new Heap(Heap.MIN);
+    private Heap<Integer> low = new Heap(Heap.SortType.MAX);
+    private Heap<Integer> high = new Heap(Heap.SortType.MIN);
 
     public void insert(Integer elem) {
         if (evenDistribution()) {
@@ -28,12 +28,12 @@ public class Median {
     }
 
     private boolean evenDistribution() {
-        return (low.size + high.size) % 2 == 0;
+        return (low.getSize() + high.getSize()) % 2 == 0;
     }
 
     private void insertToHigh(Integer elem) {
         if (elem < low.getRoot().get()) {
-            high.insert(low.extractRoot().get());
+            high.insert(low.extract().get());
             low.insert(elem);
         } else {
             high.insert(elem);
@@ -42,7 +42,7 @@ public class Median {
 
     private void insertToLow(Integer elem) {
         if (!low.isEmpty() && elem > high.getRoot().get()) {
-            low.insert(high.extractRoot().get());
+            low.insert(high.extract().get());
             high.insert(elem);
         } else {
             low.insert(elem);
@@ -50,7 +50,7 @@ public class Median {
     }
 
     public Optional<Integer> median() {
-        if (low.size == 0) return Optional.empty();
+        if (low.isEmpty()) return Optional.empty();
         return Optional.of(low.getRoot().get());
     }
 

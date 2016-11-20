@@ -11,8 +11,8 @@ public class MergeSortTest {
 
     private MergeSort underTest = new MergeSort();
 
-    int[] from1toMillion = IntStream.rangeClosed(1,1000000).toArray();
-    int[] fromMillionTo1 = IntStream.rangeClosed(1,1000000).map(nr -> 1000001 - nr).toArray();
+    int[] from1toMillion = IntStream.rangeClosed(1, 1000000).toArray();
+    int[] fromMillionTo1 = IntStream.rangeClosed(1, 1000000).map(nr -> 1000001 - nr).toArray();
 
     @Test
     public void testMergeSortForSortedInputWith1MillionItems() {
@@ -28,6 +28,13 @@ public class MergeSortTest {
     public void testMergeSortForSortedInputWith2Items() {
         assertThat(underTest.mergeSort(new int[]{1, 2}), is(new int[]{1, 2}));
     }
+
+    @Test
+    public void testMergeSortQuizArray() {
+        assertThat(underTest.mergeSort(new int[]{5, 3, 8, 9, 1, 7, 0, 2, 6, 4}), is(new int[]{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}));
+    }
+
+
 
     @Test
     public void testMergeSortForUnSortedInputWith2Items() {

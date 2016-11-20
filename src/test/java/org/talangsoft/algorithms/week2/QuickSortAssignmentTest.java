@@ -1,17 +1,17 @@
 package org.talangsoft.algorithms.week2;
 
 
-import org.junit.Assert;
 import org.junit.Test;
 import org.talangsoft.algorithms.helper.InputFileReader;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 public class QuickSortAssignmentTest {
 
     private String assigmentSourceFile = "week2/quicksort.txt";
-//
+    //
 //    Answers are:
 //       size   first  last     median
 //        10    25     29       21
@@ -24,14 +24,14 @@ public class QuickSortAssignmentTest {
 
     public void validateSorted(int[] array) {
         for (int i = 1; i < array.length; i++) {
-            Assert.assertTrue("Upcoming element should be greated than the previous. problem in position " + i + "." +
+            assertTrue("Upcoming element should be greated than the previous. problem in position " + i + "." +
                             "Element array[" + (i - 1) + "] = " + array[i - 1] + ", " +
                             "Element array[" + i + "] = " + array[i],
                     array[i] >= array[i - 1]);
         }
     }
 
-    private void expectNrOfComputation(String sourcefile, PivotChooseStrategy strategy, long numberOfCalculations) throws Exception{
+    private void expectNrOfComputation(String sourcefile, PivotChooseStrategy strategy, long numberOfCalculations) throws Exception {
         int[] elements = InputFileReader.readIntElements(sourcefile);
         QuickSort quickSort = new QuickSort(strategy);
         int[] sortedArr = quickSort.quickSort(elements);

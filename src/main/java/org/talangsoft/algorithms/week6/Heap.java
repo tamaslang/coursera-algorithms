@@ -1,36 +1,35 @@
 package org.talangsoft.algorithms.week6;
-
-
 import java.util.Optional;
 
 public final class Heap<T extends Comparable<T>> {
-    public static final int MIN = -1;
-    public static final int MAX = 1;
     public static final int CAPACITY = 2;
 
-    int size = 0;
-    T[] nodes;
-    int type = MIN;
+    public enum SortType {
+        MIN(-1),
+        MAX(1);
 
-    public Heap() {
-        this(MIN);
+        private int compareConstant;
+
+        SortType(int compareConstant) {
+            this.compareConstant = compareConstant;
+        }
     }
 
-    public boolean isEmpty(){
-        return size==0;
+    private int size = 0;
+    private T[] nodes;
+    private SortType sortType = SortType.MIN;
+
+    public boolean isEmpty() {
+        return size == 0;
     }
 
+    public int getSize() {
+        return size;
+    }
 
-    public Heap(int type) {
+    public Heap(SortType sortType) {
         nodes = (T[]) new Comparable[CAPACITY];
-        this.type = type;
-    }
-
-    private void swap(int index1, int index2) {
-        System.out.println(String.format("Swap %d %d", index1, index2));
-        T temp = nodes[index1];
-        nodes[index1] = nodes[index2];
-        nodes[index2] = temp;
+        this.sortType = sortType;
     }
 
     private int parent(int index) {
@@ -76,14 +75,9 @@ public final class Heap<T extends Comparable<T>> {
 
     public void insert(T elem) {
         if (size == nodes.length - 1) doubleSize();
-
         int pos = ++size;
         nodes[pos] = elem;
-        // bubble up
-        for (; pos > 1 && elem.compareTo(nodes[parent(pos)]) == type; pos = pos / 2)
-            nodes[pos] = nodes[pos / 2];
-
-        nodes[pos] = elem;
+        bubbleUp(pos);
     }
 
     public void insert(T... elements) {
@@ -92,7 +86,7 @@ public final class Heap<T extends Comparable<T>> {
         }
     }
 
-    public Optional<T> extractRoot() {
+    public Optional<T> extract() {
         if (size == 0) return Optional.empty();
         else {
             T root = nodes[1];
@@ -103,20 +97,31 @@ public final class Heap<T extends Comparable<T>> {
         }
     }
 
-    private void bubbleDown(int k) {
-        T tmp = nodes[k];
+    private void bubbleUp(int pos) {
+        T elem = nodes[pos];
+        for (; pos > 1 && elem.compareTo(nodes[parent(pos)]) == sortType.compareConstant; pos = pos / 2) {
+            nodes[pos] = nodes[pos / 2];
+        }
+        nodes[pos] = elem;
+    }
+
+    private void bubbleDown(int pos) {
+        T elem = nodes[pos];
         int child = 0;
 
-        for (; 2 * k <= size; k = child) {
-            child = leftChild(k);
+        for (; 2 * pos <= size; pos = child) {
+            child = leftChild(pos);
 
-            if (child != size && nodes[child].compareTo(nodes[rightChild(k)]) == (-1 * type)) child++;
-
-            if (tmp.compareTo(nodes[child]) == (-1 * type)) nodes[k] = nodes[child];
-            else
+            if (child != size && nodes[child].compareTo(nodes[rightChild(pos)]) == (-1 * sortType.compareConstant)) {
+                child++;
+            }
+            if (elem.compareTo(nodes[child]) == (-1 * sortType.compareConstant)) {
+                nodes[pos] = nodes[child];
+            } else {
                 break;
+            }
         }
-        nodes[k] = tmp;
+        nodes[pos] = elem;
     }
 
     public Optional<T> getRoot() {
@@ -124,9 +129,5 @@ public final class Heap<T extends Comparable<T>> {
         else {
             return Optional.of(nodes[1]);
         }
-    }
-
-    public void printHeap() {
-        throw new UnsupportedOperationException("Implement me");
     }
 }
